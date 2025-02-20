@@ -18,13 +18,17 @@ resource "aws_sns_topic_subscription" "email_sub" {
   endpoint  = "jogesh.bandaru@gmail.com" # Replace with actual email
 }
 
+resource "aws_cloudwatch_log_group" "app_log_group" {
+  name = "/aws/lambda/my-app-log-group"
+}
+
 resource "aws_cloudwatch_log_metric_filter" "error_filter" {
-  name           = "error-count-filter"
-  log_group_name = "cat-gif-app-log"
+  name           = "error-metric"
   pattern        = "ERROR"
+  log_group_name = aws_cloudwatch_log_group.app_log_group.name # Ensure this resource exists
 
   metric_transformation {
-    name      = "errorCount"
+    name      = "ErrorCount"
     namespace = "LogMetrics"
     value     = "1"
   }

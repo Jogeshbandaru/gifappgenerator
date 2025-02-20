@@ -1,10 +1,5 @@
 resource "aws_s3_bucket" "secure_bucket" {
-  bucket = "secure-app-bucket-unique12345"  # Change to a globally unique name
-}
-
-resource "aws_s3_bucket_acl" "secure_bucket_acl" {
-  bucket = aws_s3_bucket.secure_bucket.id
-  acl    = "private"
+  bucket = "secure-app-bucket-unique12345" # Change to a globally unique name
 }
 
 resource "aws_s3_bucket_server_side_encryption_configuration" "secure_bucket_encryption" {
@@ -16,6 +11,15 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "secure_bucket_enc
     }
   }
 }
+
+resource "aws_s3_bucket_ownership_controls" "secure_bucket_ownership" {
+  bucket = aws_s3_bucket.secure_bucket.id
+
+  rule {
+    object_ownership = "BucketOwnerEnforced"
+  }
+}
+
 
 resource "aws_s3_bucket_versioning" "secure_bucket_versioning" {
   bucket = aws_s3_bucket.secure_bucket.id
@@ -31,7 +35,7 @@ output "s3_bucket_encryption" {
 
 resource "null_resource" "s3_validation" {
   provisioner "local-exec" {
-    command = "py validate_s3.py"
+    command = "python validate_s3.py"
   }
   depends_on = [aws_s3_bucket.secure_bucket]
 }

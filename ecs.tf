@@ -33,7 +33,7 @@ resource "aws_ecs_service" "cat_gif_service" {
   launch_type     = "FARGATE"
 
   network_configuration {
-    subnets          = [aws_subnet.ecs_subnet.id]
+    subnets          = [aws_subnet.public.id, aws_subnet.private.id]
     security_groups  = [aws_security_group.ecs_sg.id]
     assign_public_ip = true
   }

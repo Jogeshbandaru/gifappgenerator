@@ -1,15 +1,3 @@
-resource "aws_cloudwatch_log_metric_filter" "error_filter" {
-  name           = var.alarm_name
-  log_group_name = var.log_group_name
-  pattern        = var.filter_pattern
-
-  metric_transformation {
-    name      = "errorCount"
-    namespace = "LogMetrics"
-    value     = "1"
-  }
-}
-
 resource "aws_cloudwatch_metric_alarm" "error_alarm" {
   alarm_name          = var.alarm_name
   comparison_operator = "GreaterThanThreshold"
